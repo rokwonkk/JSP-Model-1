@@ -14,14 +14,19 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
+    <!-- 쿠키를 사용할 수 있는 자바스크립트 -->
     <script src="http://lab.alexcican.com/set_cookies/cookie.js"></script>
 
-    <style type="text/css">
+    <style>
         .center {
             margin: auto;
             width: 60%;
             border: 2px solid;
             padding: 10px;
+        }
+
+        table {
+            border-collapse: collapse;
         }
     </style>
 
@@ -61,18 +66,17 @@
         cookie : client저장, id저장, pw저장, String 자료형 저장
         session : server저장, login 정보
     */
-
-    let user_id = $.cookie("user_id");	// 쿠키에서 id를 산출
-    if (user_id != null) {	// 쿠키에 저장한 id가 있다
+    let user_id = $.cookie("user_id");	                    // 쿠키에서 id를 산출
+    if (user_id != null) {	                                // 쿠키에 저장한 id가 있다
         $("#id").val(user_id);
         $("#chk_save_id").prop("checked", true);
     }
 
     $("#chk_save_id").click(function () {
 
-        if ($("#chk_save_id").is(":checked") == true) {	// 체크가 되었을 때
+        if ($("#chk_save_id").is(":checked") === true) {	    // 체크가 되었을 때
 
-            if ($("#id").val().trim() == "") {	// 빈문자였을 때
+            if ($("#id").val().trim() === "") {	            // 빈문자였을 때
                 alert('id를 입력해 주십시오');
                 $("#chk_save_id").prop("checked", false);	// 체크박스를 off
             } else {	// cookie에 저장
@@ -81,16 +85,7 @@
         } else {
             $.removeCookie("user_id", {path: '/'});
         }
-
     });
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-

@@ -1,6 +1,5 @@
 package dao;
 
-import java.lang.reflect.Member;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -31,9 +30,9 @@ public class MemberDao {
 				+ "		from member "
 				+ "		where = '" + id + "' ";
 		*/
-		String sql = " 	select count(*) "
-				+ "		from member "
-				+ "		where id = ? ";
+		String sql = "select count(*) "
+				+ "from member "
+				+ "where id = ? ";
 		
 		Connection conn = null;
 		PreparedStatement psmt = null;
@@ -61,7 +60,6 @@ public class MemberDao {
 		} finally {
 			DBClose.close(conn, psmt, rs);
 		}
-		
 		return count;
 	}
 	
