@@ -60,7 +60,7 @@
             text-align: center;
         }
 
-        #login {
+        button, #login {
             background: #2c2c2c;
             border: none;
             color: #ffffff;
@@ -70,19 +70,12 @@
             margin: 24px 0;
             padding: 16px;
             width: 100%;
+            cursor: pointer;
         }
 
         button {
-            background: #2c2c2c;
-            border: none;
-            color: #ffffff;
-            display: block;
-            font-size: 18px;
-            font-weight: 700;
             margin: 8px auto;
-            padding: 16px;
-            width: 25%;
-            text-align: center;
+            width: 360px;
         }
 
         #chk_save_id {
@@ -91,7 +84,8 @@
         }
 
         hr {
-            margin: 50px 560px 10px;
+            width: 360px;
+            margin: 0 auto;
         }
     </style>
 </head>

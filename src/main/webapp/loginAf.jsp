@@ -23,6 +23,7 @@
 %>
 <script>
 alert("<%=dto.getId()%>님 환영합니다");
+location.href = "bbsList.jsp";
 </script>
 <%
 } else {
