@@ -15,6 +15,19 @@
         }
         return str;
     }
+
+    //답글의 화살표와 공백을 추가하는 함수
+    public String arrow(int depth){
+
+        String rs = "<img src='./images/arrow1.png' width='20px' height='20px'/>";
+        String nbsp = "&nbsp;&nbsp;&nbsp;&nbsp;";
+
+        String ts = "";
+        for (int i = 0; i < depth; i++) {
+            ts += nbsp;
+        }
+        return depth == 0 ? "" : ts + rs;
+    }
 %>
 <%
     String choice = request.getParameter("choice");
@@ -74,6 +87,23 @@
             text-align: center;
         }
     </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            <%--let choice = "<%=choice%>";--%>
+            let search = "<%=search%>";
+
+            // alert(choice);
+            // alert(search);
+
+            if(search !== ""){
+                let choice = document.getElementById("choice");
+                choice.value = "<%=choice%>";
+
+                choice.setAttribute("selected", "selected");
+            }
+        });
+    </script>
 </head>
 <body>
 
@@ -110,6 +140,7 @@
                 <%=i + 1%>
             </td>
             <td style="text-align: left; padding-left: 10px">
+                <%=arrow(bbs.getDepth())%>
                 <a href="bbsDetail.jsp?seq=<%=bbs.getSeq()%>"><%=dot3(bbs.getTitle())%>
                 </a>
             </td>
@@ -156,7 +187,7 @@
     <option value="writer">작성자</option>
 </select>
 
-<input type="text" id="search" size="20">
+<input type="text" id="search" size="20" value="<%=search%>">
 <button type="button" onclick="searchBtn()">검색</button>
 <br/><br/>
 

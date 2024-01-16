@@ -100,7 +100,7 @@ public class BbsDao {
         } else if (choice.equals("content")) {
             sql += " where content like '%" + search + "%' ";
         } else if (choice.equals("writer")) {
-            sql += " where writer id = '" + search + "' ";
+            sql += " where id = '" + search + "' ";
         }
         sql += " order by ref desc, step asc ";
 
@@ -200,7 +200,7 @@ public class BbsDao {
 
     //글의 총수
     public int getAllBbs(String choice, String search) {
-        String sql = "select count(*) from bbs ";
+        String sql = "select COUNT(*) from bbs ";
         //검색
         switch (choice) {
             case "title":
@@ -210,7 +210,7 @@ public class BbsDao {
                 sql += " where content like '%" + search + "%' ";
                 break;
             case "writer":
-                sql += " where writer id = '" + search + "' ";
+                sql += " where id = '" + search + "' ";
                 break;
         }
 
@@ -246,11 +246,13 @@ public class BbsDao {
         } else if (choice.equals("content")) {
             sql += " where content like '%" + search + "%' ";
         } else if (choice.equals("writer")) {
-            sql += " where writer id = '" + search + "' ";
+            sql += " where id = '" + search + "' ";
         }
 
         sql += "order by ref desc, step asc ";
         sql += "limit " + (pageNumber * 10) + ", 10 ";
+
+        System.out.println(sql);
 
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -290,5 +292,183 @@ public class BbsDao {
             DBClose.close(conn, pstmt, rs);
         }
         return list;
+    }
+
+    /****************************************************************************************************************/
+    /*
+    public List<BbsDto> getBbsDetail(String seq) {
+
+        String sql = "select seq, id, ref, step, depth, title, content, wdate, del, readcount from bbs "
+                    + "where ref = " + seq;
+
+        System.out.println(sql);
+
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        List<BbsDto> list = new ArrayList<>();
+        try {
+            conn = DBConnection.getConnection();
+            System.out.println("BbsDao.getBbsDetail 1/4 success");
+
+            pstmt = conn.prepareStatement(sql);
+            System.out.println("BbsDao.getBbsDetail 2/4 success");
+
+            rs = pstmt.executeQuery();
+            System.out.println("BbsDao.getBbsDetail 3/4 success");
+
+            if (rs.next()){ // 데이터가 있는 경우
+                        int seq1 = rs.getInt(1);       //seq
+                        String id = rs.getString(2);    //id
+                        int ref = rs.getInt(3);       //ref
+                        int step = rs.getInt(4);       //step
+                        int depth = rs.getInt(5);       //depth
+                        String title = rs.getString(6);    //title
+                        String content = rs.getString(7);    //content
+                        String wdate = rs.getString(8);    //wdate
+                        int del = rs.getInt(9);       //del
+                        int readcount = rs.getInt(10);         //readcount
+                BbsDto dto = new BbsDto(seq1, id, ref, step, depth, title, content, wdate, del, readcount);
+
+                list.add(dto);
+            }
+            System.out.println("BbsDao.getBbsDetail 4/4 success");
+
+        } catch (SQLException e) {
+            System.out.println("BbsDao.getBbsPageList fail");
+            throw new RuntimeException(e);
+        } finally {
+            DBClose.close(conn, pstmt, rs);
+        }
+        return list;
+    }
+    /****************************************************************************************************************/
+    public BbsDto getBbs(int seq) {
+
+        String sql = "select seq, id, ref, step, depth, title, content, wdate, del, readcount from bbs "
+                + "where seq = ? ";
+
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        BbsDto bbs = null;
+
+        try {
+            conn = DBConnection.getConnection();
+
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, seq);
+
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+
+                int seq1 = rs.getInt(1);       //seq
+                String id = rs.getString(2);    //id
+                int ref = rs.getInt(3);       //ref
+                int step = rs.getInt(4);       //step
+                int depth = rs.getInt(5);       //depth
+                String title = rs.getString(6);    //title
+                String content = rs.getString(7);    //content
+                String wdate = rs.getString(8);    //wdate
+                int del = rs.getInt(9);       //del
+                int readcount = rs.getInt(10);         //readcount
+
+                bbs = new BbsDto(seq1, id, ref, step, depth, title, content, wdate, del, readcount);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            DBClose.close(conn, pstmt, rs);
+        }
+        return bbs;
+    }
+
+    public void readcount(int seq) {
+        String sql = "update bbs "
+                + "set readcount=readcount+1 "
+                + "where seq=?";
+
+        Connection conn = DBConnection.getConnection();
+        PreparedStatement pstmt = null;
+
+        try {
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, seq);
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            DBClose.close(conn, pstmt, null);
+        }
+    }
+
+    public void answerUpdate(int seq) {
+        String sql = "update bbs "
+                + "set step = step + 1 "
+                + "where ref=(select ref from (select ref from bbs a where seq=?) A) "
+                + "and step>(select step from (select step from bbs b where seq=?) B) ";
+
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            conn = DBConnection.getConnection();
+            pstmt = conn.prepareStatement(sql);
+
+            pstmt.setInt(1, seq);
+            pstmt.setInt(2, seq);
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            DBClose.close(conn, pstmt, null);
+        }
+    }
+
+    public boolean answerInsert(int seq, BbsDto bbs) {
+
+        String sql = "insert into bbs (id, ref, step, depth, title, content, wdate, del, readcount) "
+                + "         values (?, "
+                + "        (select ref from bbs a where seq=?), "
+                + "        (select step from bbs b where seq=?) + 1, "
+                + "        (select depth from bbs c where seq=?) + 1, "
+                + "        ?, ?, now(), 0, 0) ";
+
+        Connection conn = DBConnection.getConnection();
+        PreparedStatement pstmt = null;
+
+        int count = 0;
+
+        try {
+            conn = DBConnection.getConnection();
+            System.out.println("BbsDao.answerInsert 1/3 success");
+
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, bbs.getId());
+            pstmt.setInt(2, seq);
+            pstmt.setInt(3, seq);
+            pstmt.setInt(4, seq);
+            pstmt.setString(5, bbs.getTitle());
+            pstmt.setString(6, bbs.getContent());
+            System.out.println("BbsDao.answerInsert 2/3 success");
+
+            count = pstmt.executeUpdate();
+            System.out.println("BbsDao.answerInsert 3/3 success");
+
+
+        } catch (SQLException e) {
+            System.out.println("BbsDao.answerInsert fail");
+
+            throw new RuntimeException(e);
+        } finally {
+            DBClose.close(conn, pstmt, null);
+        }
+
+        return count>0?true:false;
     }
 }
