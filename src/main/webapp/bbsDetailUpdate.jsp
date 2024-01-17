@@ -37,6 +37,7 @@
         th {
             border: 1px solid lightgray;
             text-align: center;
+            vertical-align: middle;
         }
 
         button {
@@ -48,13 +49,16 @@
 <br/>
 <div align="center">
     <form action="bbsDetailUpdateAf.jsp" method="post">
+
+        <input type="hidden" name="seq" value="<%=seq%>">
+
         <table class="table mytable">
             <col width="200"/>
             <col width="400"/>
             <tr>
                 <th>작성자</th>
                 <td>
-                    <%=login.getId()%>
+                    <%=dto.getId()%>
                 </td>
             </tr>
             <tr>
@@ -68,7 +72,7 @@
             </tr>
             <tr>
                 <th>제목</th>
-                <td><input type="text" name="title" value="<%=dto.getTitle()%>">
+                <td><input type="text" name="title" size="60" value="<%=dto.getTitle()%>">
                 </td>
             </tr>
             <tr>

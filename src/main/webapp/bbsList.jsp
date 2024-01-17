@@ -107,7 +107,7 @@
 </head>
 <body>
 
-<h1 style="text-align: center">게시판</h1>
+<h1 style="text-align: center; padding: 40px">게시판</h1>
 
 <div class="center">
     <table class="table table-hover">
@@ -141,7 +141,17 @@
             </td>
             <td style="text-align: left; padding-left: 10px">
                 <%=arrow(bbs.getDepth())%>
+                <%
+                    if(bbs.getDel() == 0){
+                %>
                 <a href="bbsDetail.jsp?seq=<%=bbs.getSeq()%>"><%=dot3(bbs.getTitle())%>
+                <%
+                    } else {
+                %>
+                    <font color="red"> ***** 이 글은 작성자의 의해서 삭제된 글 입니다. *****</font>
+                <%
+                    }
+                %>
                 </a>
             </td>
             <td>

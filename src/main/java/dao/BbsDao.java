@@ -469,6 +469,70 @@ public class BbsDao {
             DBClose.close(conn, pstmt, null);
         }
 
-        return count>0?true:false;
+        return count > 0 ? true : false;
+    }
+
+    public boolean bbsDetailUpdate(int seq, String title, String content) {
+        String sql = "update bbs "
+                + "set title = ? , content = ? "
+                + "where seq = ?";
+
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        int count = 0;
+
+        try {
+
+            conn = DBConnection.getConnection();
+            System.out.println("BbsDao.bbsDetailUpdate 1/3 success");
+
+            pstmt = conn.prepareStatement(sql);
+
+            pstmt.setString(1, title);
+            pstmt.setString(2, content);
+            pstmt.setInt(3, seq);
+            System.out.println("BbsDao.bbsDetailUpdate 2/3 success");
+
+            count = pstmt.executeUpdate();
+            System.out.println("BbsDao.bbsDetailUpdate 3/3 success");
+        } catch (SQLException e) {
+            System.out.println("BbsDao.bbsDetailUpdate fail");
+            throw new RuntimeException(e);
+        } finally {
+            DBClose.close(conn, pstmt,null);
+        }
+        return count > 0 ? true : false;
+    }
+
+    public boolean bbsDelite(int seq) {
+        String sql = "update bbs "
+                + "set del = 1 "
+                + "where seq = ? ";
+
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        int count = 0;
+
+        try {
+
+            conn = DBConnection.getConnection();
+            System.out.println("BbsDao.bbsDelite 1/3 success");
+
+            pstmt = conn.prepareStatement(sql);
+
+            pstmt.setInt(1, seq);
+            System.out.println("BbsDao.bbsDelite 2/3 success");
+
+            count = pstmt.executeUpdate();
+            System.out.println("BbsDao.bbsDelite 3/3 success");
+        } catch (SQLException e) {
+            System.out.println("BbsDao.bbsDelite fail");
+            throw new RuntimeException(e);
+        } finally {
+            DBClose.close(conn, pstmt,null);
+        }
+        return count > 0 ? true : false;
     }
 }

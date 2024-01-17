@@ -44,6 +44,7 @@
         th {
             border: 1px solid lightgray;
             text-align: center;
+            vertical-align: middle;
         }
 
         button {
@@ -105,8 +106,14 @@
     }
 
     function deleteBbs(seq){
-
+        let Yn = confirm("정말 글을 삭제하시겠습니까?");
+        if(!Yn){
+            alert("삭제를 취소합니다");
+            return;
+        }
+        location.href = "bbsDelete.jsp?seq=" + seq;
     }
+
     function answerBbs(seq) {
         location.href = "answer.jsp?seq=" + seq;
     }
