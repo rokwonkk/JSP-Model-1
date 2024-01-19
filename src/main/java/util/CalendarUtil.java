@@ -60,26 +60,28 @@ public class CalendarUtil {
     }
 
     //날짜별로 테이블을 생성하기 위한 함수
-    public static StringBuilder makeTable(int year, int month, int day, List<CalendarDto> list) {
+    public static String makeTable(int year, int month, int day, List<CalendarDto> list) {
+        String str = "";
 
-        StringBuilder str = new StringBuilder();
-        // 202401180412
+        // 202401180415
         String dates = (year + "") + two(month + "") + two(day + "");
 
-        str.append("<table>");
+        str += "<table>";
 
-        for (CalendarDto dto : list) {
-            if (dto.getRdate().substring(0, 8).equals(dates)) {
-                str.append("<tr>");
-                str.append("<td style='paddging:0px'>");
-                str.append("<a href='calDetail.jsp?seq=").append(dto.getSeq()).append("'></a>");
-                str.append("<font style='font-size:10px; color:blue'></font>");
-                str.append(dot3(dto.getTitle()));
-                str.append("</td>");
-                str.append("</tr>");
+        for(CalendarDto dto : list) {
+            if(dto.getRdate().substring(0, 8).equals(dates)) {
+                str += "<tr>";
+                str += "	<td style='padding:0px'>";
+                str += "		<a href='calDetail.jsp?seq=" + dto.getSeq() + "'>";
+                str += "			<font style='font-size:15px;color:blue'>";
+                str += 					dot3( dto.getTitle() );
+                str += "			</font>";
+                str += "		</a>";
+                str += "	</td>";
+                str += "</tr>";
             }
         }
-        str.append("</table>");
+        str += "</table>";
 
         return str;
     }
@@ -93,8 +95,8 @@ public class CalendarUtil {
 
         String s = mdate.substring(0, 4) + "-"                  //yyyy
                 + mdate.substring(4, 6) + "-"                   //MM
-                + mdate.substring(6, 8) + "-"                   //dd
-                + mdate.substring(8, 10) + "-"                  //hh
+                + mdate.substring(6, 8) + " "                   //dd
+                + mdate.substring(8, 10) + ":"                  //hh
                 + mdate.substring(10) + ":00";      //mm
 
         Timestamp d = Timestamp.valueOf(s);

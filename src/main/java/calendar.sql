@@ -15,8 +15,18 @@ alter table calendar
 
 select * from calendar;
 
-select seq,id,title, content, rdate, wdate from
-    ( select row_number() over (partition by substr(rdate, 1 ,8) order by rdate asc) as rnum,
-    seq, id, title, content, rdate, wdate from calendar
-    where id = ? and substr(rdate, 1 , 6)=? ) a
-where rnum between 1 and 5
+select seq, id, title, content, rdate, wdate
+from (select row_number() over (partition by substr(rdate, 1, 8) order by rdate asc) as rnum,
+             seq,
+             id,
+             title,
+             content,
+             rdate,
+             wdate
+      from calendar
+      where id = ?
+        and substr(rdate, 1, 6) = ?) a
+where rnum between 1 and 5;
+
+
+select * from calendar;

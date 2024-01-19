@@ -505,7 +505,7 @@ public class BbsDao {
         return count > 0 ? true : false;
     }
 
-    public boolean bbsDelite(int seq) {
+    public boolean bbsDelete(int seq) {
         String sql = "update bbs "
                 + "set del = 1 "
                 + "where seq = ? ";

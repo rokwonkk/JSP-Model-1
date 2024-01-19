@@ -3,7 +3,6 @@ package dao;
 import db.DBClose;
 import db.DBConnection;
 import dto.CalendarDto;
-import org.checkerframework.checker.units.qual.A;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -23,7 +22,7 @@ public class CalendarDao {
         return dao;
     }
 
-    public List<CalendarDto> getCalendarList(String id, String yyyyMM){
+    public List<CalendarDto> getCalendarList(String id, String yyyyMM) {
 
         String sql = "select seq,id,title, content, rdate, wdate from "
                 + "    ( select row_number() over (partition by substr(rdate, 1 ,8) order by rdate asc) as rnum, "
@@ -49,7 +48,7 @@ public class CalendarDao {
 
             rs = pstmt.executeQuery();
 
-            while (rs.next()){
+            while (rs.next()) {
 
                 CalendarDto dto = new CalendarDto(rs.getInt(1),
                         rs.getString(2),
@@ -67,9 +66,146 @@ public class CalendarDao {
             System.out.println("CalendarDao.getCalendarList fail");
             throw new RuntimeException(e);
         } finally {
-            DBClose.close(conn,pstmt,rs);
+            DBClose.close(conn, pstmt, rs);
         }
 
         return list;
+    }
+
+    public boolean addCalendar(CalendarDto dto) {
+
+        String sql = "insert into calendar(id, title, content, rdate, wdate) values"
+                + "(?,?,?,?,now()) ";
+
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        int count = 0;
+
+        try {
+            conn = DBConnection.getConnection();
+            System.out.println("CalendarDao.addCalendar 1");
+
+            pstmt = conn.prepareStatement(sql);
+            System.out.println("CalendarDao.addCalendar 2");
+
+            pstmt.setString(1, dto.getId());
+            pstmt.setString(2, dto.getTitle());
+            pstmt.setString(3, dto.getContent());
+            pstmt.setString(4, dto.getRdate());
+
+            count = pstmt.executeUpdate();
+            System.out.println("CalendarDao.addCalendar 3");
+
+        } catch (SQLException e) {
+            System.out.println("CalendarDao.addCalendar fail");
+            throw new RuntimeException(e);
+        } finally {
+            DBClose.close(conn, pstmt, null);
+        }
+        return count > 0;
+    }
+
+    public CalendarDto getCalendar(int seq) {
+
+        String sql = "select seq, id, title, content, rdate, wdate from calendar "
+                + "where seq = ? ";
+
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        CalendarDto cal = null;
+
+        try {
+            conn = DBConnection.getConnection();
+
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, seq);
+
+            rs = pstmt.executeQuery();
+
+
+
+            if (rs.next()) {
+
+                int seq1 = rs.getInt(1);            //seq
+                String id = rs.getString(2);        //id
+                String title = rs.getString(3);     //title
+                String content = rs.getString(4);   //content
+                String rdate = rs.getString(5);     //rdate
+                String wdate = rs.getString(6);     //wdate
+
+                cal = new CalendarDto(seq1, id, title, content, rdate, wdate);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            DBClose.close(conn, pstmt, rs);
+        }
+        return cal;
+    }
+
+    public boolean calDelete(int seq) {
+        String sql = "delete from calendar "
+                + "where seq = ? ";
+
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        int count = 0;
+
+        try {
+
+            conn = DBConnection.getConnection();
+            System.out.println("CalendarDao.calendarDelete 1/3 success");
+
+            pstmt = conn.prepareStatement(sql);
+
+            pstmt.setInt(1, seq);
+            System.out.println("CalendarDao.calendarDelete 2/3 success");
+
+            count = pstmt.executeUpdate();
+            System.out.println("CalendarDao.calendarDelete 3/3 success");
+        } catch (SQLException e) {
+            System.out.println("CalendarDao.calendarDelete fail");
+            throw new RuntimeException(e);
+        } finally {
+            DBClose.close(conn, pstmt,null);
+        }
+        return count > 0 ? true : false;
+    }
+
+    public boolean calDetailUpdate(int seq, String title, String content) {
+        String sql = "update calendar "
+                + "set title = ? , content = ? "
+                + "where seq = ?";
+
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        int count = 0;
+
+        try {
+
+            conn = DBConnection.getConnection();
+            System.out.println("CalendarDao.calDetailUpdate 1/3 success");
+
+            pstmt = conn.prepareStatement(sql);
+
+            pstmt.setString(1, title);
+            pstmt.setString(2, content);
+            pstmt.setInt(3, seq);
+            System.out.println("CalendarDao.calDetailUpdate 2/3 success");
+
+            count = pstmt.executeUpdate();
+            System.out.println("CalendarDao.calDetailUpdate 3/3 success");
+        } catch (SQLException e) {
+            System.out.println("CalendarDao.calDetailUpdate fail");
+            throw new RuntimeException(e);
+        } finally {
+            DBClose.close(conn, pstmt,null);
+        }
+        return count > 0 ? true : false;
     }
 }
