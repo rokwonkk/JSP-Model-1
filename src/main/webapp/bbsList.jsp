@@ -109,6 +109,8 @@
 
 <h1 style="text-align: center; padding: 40px">게시판</h1>
 
+<a href="calendarList.jsp">일정관리</a>
+
 <div class="center">
     <table class="table table-hover">
         <col width="70"/>
