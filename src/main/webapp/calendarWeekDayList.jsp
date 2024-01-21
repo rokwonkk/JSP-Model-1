@@ -53,9 +53,9 @@
                 <%
                     for (int j = 0; j <= WEEKDAY; j++) {
                 %>
-                <%--                <td><button type="button" style="width: 120px">일정추가</button> </td>--%>
-                <%--                <td id="<%=i%>_<%=j%>"><%=i%>_<%=j%></td>--%>
-                <td id="<%=i%>_<%=j%>"></td>
+                                <td><button  id="<%=i%>_<%=j%>" type="button" style="width: 120px">일정추가</button> </td>
+<%--                                <td id="<%=i%>_<%=j%>"><%=i%>_<%=j%></td>--%>
+<%--                <td id="<%=i%>_<%=j%>"></td>--%>
                 <%
                     }
                 %>
