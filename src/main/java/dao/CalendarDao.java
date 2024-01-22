@@ -208,4 +208,50 @@ public class CalendarDao {
         }
         return count > 0 ? true : false;
     }
+
+    public List<CalendarDto> calDayList(String id, String yyyymmdd){
+        String sql = "select seq, id, title, content, rdate, wdate "
+                + "from calendar "
+                + "where id=? and substr(rdate, 1, 8)=? "
+                + "order by rdate asc ";
+
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        List<CalendarDto> list = new ArrayList<>();
+
+        try {
+            conn = DBConnection.getConnection();
+            System.out.println("CalendarDao.calDayList 1/3 success");
+
+            pstmt = conn.prepareStatement(sql);
+
+            pstmt.setString(1, id);
+            pstmt.setString(2, yyyymmdd);
+            System.out.println("CalendarDao.calDayList 2/3 success");
+
+
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+
+                CalendarDto dto = new CalendarDto(
+                        rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getString(5),
+                        rs.getString(6)
+                );
+                list.add(dto);
+            }
+            System.out.println("CalendarDao.calDayList 3/3 success");
+        } catch (SQLException e) {
+            System.out.println("CalendarDao.calDayList fail");
+            throw new RuntimeException(e);
+        } finally {
+            DBClose.close(conn, pstmt, rs);
+        }
+        return list;
+    }
 }

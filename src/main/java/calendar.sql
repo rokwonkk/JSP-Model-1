@@ -28,5 +28,10 @@ from (select row_number() over (partition by substr(rdate, 1, 8) order by rdate 
         and substr(rdate, 1, 6) = ?) a
 where rnum between 1 and 5;
 
-
 select * from calendar;
+
+select seq, id, title, content, rdate, wdate
+from calendar
+where id='aaa' and substr(rdate, 1, 8)='20240118'
+order by rdate asc;
+

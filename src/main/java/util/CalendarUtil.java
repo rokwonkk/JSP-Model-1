@@ -34,7 +34,7 @@ public class CalendarUtil {
         return str;
     }
 
-    //일별 일정을 모두 볼 수 있는 bbsdaylist.jsp로 이동되도록 하는 함수
+    //일별 일정을 모두 볼 수 있는 caldaylist.jsp로 이동되도록 하는 함수
     public static String daylist(int year, int month, int day) {
         String str = "";
 
@@ -91,13 +91,13 @@ public class CalendarUtil {
     public static String toDates(String mdate) {
 
         //날짜형식
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 hh시 mm분");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 a hh시 mm분"); // a:오전,오후. 시간을 HH로하면 24시간으로 설정된다
 
         String s = mdate.substring(0, 4) + "-"                  //yyyy
                 + mdate.substring(4, 6) + "-"                   //MM
                 + mdate.substring(6, 8) + " "                   //dd
                 + mdate.substring(8, 10) + ":"                  //hh
-                + mdate.substring(10) + ":00";      //mm
+                + mdate.substring(10) + ":00";      //mm:ss
 
         Timestamp d = Timestamp.valueOf(s);
         return sdf.format(d);
